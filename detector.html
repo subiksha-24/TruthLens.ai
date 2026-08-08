@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TruthLens AI | Investigation Engine</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at 80% 20%,
+            rgba(0,130,255,0.12),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 15% 80%,
+            rgba(0,255,160,0.06),
+            transparent 30%
+        ),
+        #030609;
+
+    color: #eaf4ff;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+body::before {
+
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: 0.14;
+
+    background-image:
+
+        linear-gradient(
+            rgba(0,150,255,0.12) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(0,150,255,0.12) 1px,
+            transparent 1px
+        );
+
+    background-size: 45px 45px;
+}
+
+
+/* ==================================================
+   HEADER
+================================================== */
+
+header {
+
+    height: 80px;
+
+    padding: 0 7%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    border-bottom:
+        1px solid
+        rgba(80,160,255,0.15);
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+.logo {
+
+    font-size: 22px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+}
+
+
+.logo span {
+
+    color: #3288ff;
+}
+
+
+.ai {
+
+    color: #45ff9a;
+
+    font-size: 9px;
+
+    letter-spacing: 2px;
+
+    margin-left: 3px;
+}
+
+
+.status {
+
+    font-size: 10px;
+
+    color: #45ff9a;
+
+    letter-spacing: 2px;
+}
+
+
+.status::before {
+
+    content: "●";
+
+    margin-right: 7px;
+}
+
+
+/* ==================================================
+   MAIN
+================================================== */
+
+main {
+
+    width: min(1100px, 90%);
+
+    margin: auto;
+
+    padding: 60px 0 100px;
+
+    position: relative;
+
+    z-index: 1;
+}
+
+
+.system-label {
+
+    text-align: center;
+
+    color: #4ba8ff;
+
+    font-size: 10px;
+
+    letter-spacing: 4px;
+
+    margin-bottom: 15px;
+}
+
+
+h1 {
+
+    text-align: center;
+
+    font-size:
+        clamp(38px, 6vw, 70px);
+
+    margin-bottom: 15px;
+}
+
+
+h1 span {
+
+    color: #45ff9a;
+}
+
+
+.intro {
+
+    max-width: 650px;
+
+    margin: auto;
+
+    text-align: center;
+
+    color: #8395a9;
+
+    line-height: 1.7;
+
+    font-size: 14px;
+
+    margin-bottom: 45px;
+}
+
+
+/* ==================================================
+   INPUT PANEL
+================================================== */
+
+.input-panel {
+
+    border:
+        1px solid
+        rgba(50,136,255,0.4);
+
+    background:
+        rgba(6,14,23,0.9);
+
+    padding: 30px;
+
+    position: relative;
+
+    box-shadow:
+        0 0 50px
+        rgba(0,100,255,0.06);
+}
+
+
+.corner {
+
+    position: absolute;
+
+    width: 18px;
+
+    height: 18px;
+
+    border-color: #3288ff;
+
+    border-style: solid;
+}
+
+
+.tl {
+
+    top: -1px;
+    left: -1px;
+
+    border-width:
+        2px 0 0 2px;
+}
+
+
+.tr {
+
+    top: -1px;
+    right: -1px;
+
+    border-width:
+        2px 2px 0 0;
+}
+
+
+.bl {
+
+    bottom: -1px;
+    left: -1px;
+
+    border-width:
+        0 0 2px 2px;
+}
+
+
+.br {
+
+    bottom: -1px;
+    right: -1px;
+
+    border-width:
+        0 2px 2px 0;
+}
+
+
+.input-header {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    margin-bottom: 15px;
+}
+
+
+.input-title {
+
+    color: #45ff9a;
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+}
+
+
+.input-type {
+
+    color: #617487;
+
+    font-size: 10px;
+
+    letter-spacing: 1px;
+}
+
+
+/* ==================================================
+   TEXTAREA
+================================================== */
+
+textarea {
+
+    width: 100%;
+
+    min-height: 230px;
+
+    resize: vertical;
+
+    background: #040a10;
+
+    border:
+        1px solid
+        #172b3d;
+
+    color: #eaf4ff;
+
+    padding: 20px;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 15px;
+
+    line-height: 1.7;
+
+    outline: none;
+
+    transition: 0.25s;
+
+    display: block;
+
+    margin-bottom: 15px;
+}
+
+
+textarea:focus {
+
+    border-color: #3288ff;
+
+    box-shadow:
+        0 0 20px
+        rgba(50,136,255,0.08);
+}
+
+
+textarea::placeholder {
+
+    color: #506174;
+}
+
+
+/* ==================================================
+   URL
+================================================== */
+
+.url-input {
+
+    width: 100%;
+
+    background: #040a10;
+
+    border:
+        1px solid
+        #172b3d;
+
+    color: #eaf4ff;
+
+    padding: 16px 20px;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition: 0.25s;
+}
+
+
+.url-input:focus {
+
+    border-color: #3288ff;
+
+    box-shadow:
+        0 0 20px
+        rgba(50,136,255,0.08);
+}
+
+
+.url-input::placeholder {
+
+    color: #506174;
+}
+
+
+/* ==================================================
+   CONTROLS
+================================================== */
+
+.controls {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    margin-top: 18px;
+
+    gap: 15px;
+}
+
+
+.demo-btn {
+
+    background: transparent;
+
+    border:
+        1px solid
+        #29445d;
+
+    color: #8ea5ba;
+
+    padding: 14px 20px;
+
+    cursor: pointer;
+
+    letter-spacing: 1px;
+
+    font-size: 10px;
+
+    transition: 0.25s;
+}
+
+
+.demo-btn:hover {
+
+    border-color: #3288ff;
+
+    color: white;
+}
+
+
+.analyze-btn {
+
+    background: #3288ff;
+
+    border:
+        1px solid
+        #3288ff;
+
+    color: #02060a;
+
+    padding: 15px 30px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    transition: 0.25s;
+}
+
+
+.analyze-btn:hover {
+
+    box-shadow:
+        0 0 30px
+        rgba(50,136,255,0.3);
+
+    transform:
+        translateY(-2px);
+}
+
+
+.analyze-btn:disabled {
+
+    opacity: 0.45;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+.demo-note {
+
+    margin-top: 15px;
+
+    color: #526578;
+
+    font-size: 10px;
+}
+
+
+/* ==================================================
+   RESULT
+================================================== */
+
+.result {
+
+    display: none;
+
+    margin-top: 45px;
+}
+
+
+.result-top {
+
+    border:
+        1px solid
+        #24384a;
+
+    background:
+        rgba(6,14,23,0.9);
+
+    padding: 35px;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 40px;
+}
+
+
+.result-label {
+
+    color: #668096;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 12px;
+}
+
+
+.verdict {
+
+    font-size:
+        clamp(38px,5vw,60px);
+
+    font-weight: 800;
+
+    margin-bottom: 15px;
+}
+
+
+.verdict.fake {
+
+    color: #ff5d6c;
+}
+
+
+.verdict.real {
+
+    color: #45ff9a;
+}
+
+
+.verdict.uncertain {
+
+    color: #ffc857;
+}
+
+
+.confidence-number {
+
+    font-size: 25px;
+
+    font-weight: bold;
+}
+
+
+.confidence-bar {
+
+    width: 100%;
+
+    height: 8px;
+
+    background: #101a24;
+
+    margin-top: 12px;
+}
+
+
+.confidence-fill {
+
+    width: 0%;
+
+    height: 100%;
+
+    transition:
+        width 1s ease;
+}
+
+
+.confidence-fill.fake {
+
+    background: #ff5d6c;
+}
+
+
+.confidence-fill.real {
+
+    background: #45ff9a;
+}
+
+
+.confidence-fill.uncertain {
+
+    background: #ffc857;
+}
+
+
+.claim-box {
+
+    background: #040a10;
+
+    border-left:
+        2px solid
+        #3288ff;
+
+    padding: 20px;
+
+    color: #a7b7c7;
+
+    line-height: 1.6;
+
+    font-size: 13px;
+
+    max-height: 170px;
+
+    overflow-y: auto;
+}
+
+
+/* ==================================================
+   VERIFY BUTTON
+================================================== */
+
+.verify-btn {
+
+    display: none;
+
+    margin: 22px auto 0;
+
+    padding: 16px 30px;
+
+    background: #ffc857;
+
+    border:
+        1px solid
+        #ffc857;
+
+    color: #05080c;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    cursor: pointer;
+
+    transition: 0.25s;
+}
+
+
+.verify-btn:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 0 30px
+        rgba(255,200,87,0.3);
+}
+
+
+/* ==================================================
+   SECTIONS
+================================================== */
+
+.section {
+
+    margin-top: 25px;
+
+    border:
+        1px solid
+        #1b2c3d;
+
+    background:
+        rgba(6,14,23,0.85);
+
+    padding: 30px;
+}
+
+
+.section-title {
+
+    color: #45ff9a;
+
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 22px;
+}
+
+
+.signals {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap: 12px;
+}
+
+
+.signal {
+
+    border:
+        1px solid
+        #182a3a;
+
+    padding: 18px;
+
+    background: #050b11;
+}
+
+
+.signal-head {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    margin-bottom: 8px;
+}
+
+
+.signal-name {
+
+    color: #b5c7d8;
+
+    font-size: 13px;
+}
+
+
+.signal-status {
+
+    font-size: 10px;
+
+    letter-spacing: 1px;
+}
+
+
+.warning {
+
+    color: #ffc857;
+}
+
+
+.danger {
+
+    color: #ff5d6c;
+}
+
+
+.good {
+
+    color: #45ff9a;
+}
+
+
+.signal p {
+
+    color: #64778a;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+
+/* ==================================================
+   EVIDENCE
+================================================== */
+
+.evidence {
+
+    color: #8295a8;
+
+    line-height: 1.7;
+
+    font-size: 13px;
+}
+
+
+.evidence-placeholder {
+
+    border:
+        1px dashed
+        #243b50;
+
+    padding: 25px;
+
+    text-align: center;
+
+    color: #53677a;
+
+    margin-top: 15px;
+}
+
+
+/* ==================================================
+   AGAIN
+================================================== */
+
+.again {
+
+    display: block;
+
+    margin: 35px auto 0;
+
+    padding: 15px 28px;
+
+    background: transparent;
+
+    border:
+        1px solid
+        #3288ff;
+
+    color: #75b5ff;
+
+    cursor: pointer;
+
+    letter-spacing: 2px;
+
+    transition: 0.25s;
+}
+
+
+.again:hover {
+
+    background: #3288ff;
+
+    color: #02060a;
+}
+
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media (max-width:700px) {
+
+    header {
+
+        padding: 0 5%;
+    }
+
+
+    .status {
+
+        display: none;
+    }
+
+
+    main {
+
+        padding-top: 40px;
+    }
+
+
+    .input-panel {
+
+        padding: 20px;
+    }
+
+
+    .controls {
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .demo-btn,
+    .analyze-btn {
+
+        width: 100%;
+    }
+
+
+    .result-top {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .signals {
+
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+
+        TRUTH<span>LENS</span>
+
+        <sup class="ai">
+            AI
+        </sup>
+
+    </div>
+
+
+    <div class="status">
+
+        INVESTIGATION ENGINE READY
+
+    </div>
+
+</header>
+
+
+<main>
+
+
+<div class="system-label">
+
+    TRUTHLENS // INVESTIGATION ENGINE
+
+</div>
+
+
+<h1>
+
+    VERIFY THE <span>CLAIM.</span>
+
+</h1>
+
+
+<p class="intro">
+
+    Paste a news headline, claim, or article below.
+    Add the source URL if available.
+    TruthLens will analyze the text using its
+    machine-learning model.
+
+</p>
+
+
+<section class="input-panel">
+
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+
+
+    <div class="input-header">
+
+        <div class="input-title">
+
+            INPUT CLAIM
+
+        </div>
+
+
+        <div class="input-type">
+
+            HEADLINE / CLAIM / ARTICLE
+
+        </div>
+
+    </div>
+
+
+    <textarea
+        id="newsInput"
+        placeholder="Paste the news headline, claim, or article you want to investigate..."
+    ></textarea>
+
+
+    <input
+        type="url"
+        id="articleUrl"
+        class="url-input"
+        placeholder="Optional: paste the article URL here..."
+    >
+
+
+    <div class="controls">
+
+        <button
+            class="demo-btn"
+            id="demoButton"
+        >
+
+            ⚡ TRY DEMO
+
+        </button>
+
+
+        <button
+            class="analyze-btn"
+            id="analyzeButton"
+        >
+
+            ANALYZE CLAIM →
+
+        </button>
+
+    </div>
+
+
+    <div class="demo-note">
+
+        DEMO MODE uses sample data.
+        The final system connects this interface
+        to the trained machine-learning model.
+
+    </div>
+
+</section>
+
+
+<section
+    class="result"
+    id="result"
+>
+
+
+<div class="result-top">
+
+
+<div>
+
+    <div class="result-label">
+
+        TRUTHLENS VERDICT
+
+    </div>
+
+
+    <div
+        class="verdict"
+        id="verdict"
+    >
+
+        ANALYZING
+
+    </div>
+
+
+    <div class="result-label">
+
+        MODEL CONFIDENCE
+
+    </div>
+
+
+    <div
+        class="confidence-number"
+        id="confidenceNumber"
+    >
+
+        0%
+
+    </div>
+
+
+    <div class="confidence-bar">
+
+        <div
+            class="confidence-fill"
+            id="confidenceFill"
+        ></div>
+
+    </div>
+
+
+    <button
+        class="verify-btn"
+        id="verifyButton"
+    >
+
+        🔎 VERIFY THIS CLAIM →
+
+    </button>
+
+</div>
+
+
+<div>
+
+    <div class="result-label">
+
+        CLAIM UNDER INVESTIGATION
+
+    </div>
+
+
+    <div
+        class="claim-box"
+        id="claimOutput"
+    ></div>
+
+</div>
+
+
+</div>
+
+
+<section class="section">
+
+
+<div class="section-title">
+
+    WHY DID THE MODEL DECIDE THIS?
+
+</div>
+
+
+<div class="signals">
+
+
+<div class="signal">
+
+    <div class="signal-head">
+
+        <div class="signal-name">
+            Language Pattern
+        </div>
+
+        <div class="signal-status warning">
+            ANALYZED
+        </div>
+
+    </div>
+
+    <p>
+        The model checks wording patterns
+        learned from previously labeled
+        news examples.
+    </p>
+
+</div>
+
+
+<div class="signal">
+
+    <div class="signal-head">
+
+        <div class="signal-name">
+            Claim Consistency
+        </div>
+
+        <div class="signal-status warning">
+            ANALYZED
+        </div>
+
+    </div>
+
+    <p>
+        The text is compared against patterns
+        learned from real and fake news examples.
+    </p>
+
+</div>
+
+
+<div class="signal">
+
+    <div class="signal-head">
+
+        <div class="signal-name">
+            Evidence Signal
+        </div>
+
+        <div class="signal-status warning">
+            ANALYZED
+        </div>
+
+    </div>
+
+    <p>
+        TruthLens records the submitted source
+        URL for the verification stage.
+    </p>
+
+</div>
+
+
+<div class="signal">
+
+    <div class="signal-head">
+
+        <div class="signal-name">
+            Misinformation Pattern
+        </div>
+
+        <div class="signal-status warning">
+            ANALYZED
+        </div>
+
+    </div>
+
+    <p>
+        The machine-learning model searches
+        for patterns learned during training.
+    </p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<section class="section">
+
+
+<div class="section-title">
+
+    🔎 VERIFICATION EVIDENCE
+
+</div>
+
+
+<div class="evidence">
+
+    TruthLens has received the article source
+    information and can use it in the next
+    verification stage.
+
+
+    <div
+        class="evidence-placeholder"
+        id="evidenceOutput"
+    >
+
+        Waiting for article analysis...
+
+    </div>
+
+</div>
+
+</section>
+
+
+<button
+    class="again"
+    id="againButton"
+>
+
+    ← ANALYZE ANOTHER CLAIM
+
+</button>
+
+
+</section>
+
+
+</main>
+
+
+<script>
+
+/* ==================================================
+   ELEMENTS
+================================================== */
+
+const newsInput =
+    document.getElementById("newsInput");
+
+const articleUrl =
+    document.getElementById("articleUrl");
+
+const analyzeButton =
+    document.getElementById("analyzeButton");
+
+const demoButton =
+    document.getElementById("demoButton");
+
+const result =
+    document.getElementById("result");
+
+const verdict =
+    document.getElementById("verdict");
+
+const confidenceNumber =
+    document.getElementById("confidenceNumber");
+
+const confidenceFill =
+    document.getElementById("confidenceFill");
+
+const claimOutput =
+    document.getElementById("claimOutput");
+
+const evidenceOutput =
+    document.getElementById("evidenceOutput");
+
+const againButton =
+    document.getElementById("againButton");
+
+const verifyButton =
+    document.getElementById("verifyButton");
+
+
+/* ==================================================
+   DEMO
+================================================== */
+
+const demoNews =
+"Scientists have discovered a new technology that allows ordinary smartphones to charge themselves completely using moonlight.";
+
+
+/* ==================================================
+   TRY DEMO
+================================================== */
+
+demoButton.addEventListener(
+    "click",
+    async () => {
+
+        newsInput.value =
+            demoNews;
+
+        articleUrl.value = "";
+
+        await analyzeNews();
+
+    }
+);
+
+
+/* ==================================================
+   ANALYZE BUTTON
+================================================== */
+
+analyzeButton.addEventListener(
+    "click",
+    async () => {
+
+        const text =
+            newsInput.value.trim();
+
+        if (!text) {
+
+            alert(
+                "Please enter a news claim first."
+            );
+
+            return;
+
+        }
+
+        await analyzeNews();
+
+    }
+);
+
+
+/* ==================================================
+   ANALYZE NEWS
+================================================== */
+
+async function analyzeNews() {
+
+    const text =
+        newsInput.value.trim();
+
+    const sourceUrl =
+        articleUrl.value.trim();
+
+
+    if (!text) {
+
+        alert(
+            "Please enter some news first."
+        );
+
+        return;
+
+    }
+
+
+    result.style.display =
+        "block";
+
+
+    claimOutput.textContent =
+        text;
+
+
+    verdict.textContent =
+        "ANALYZING...";
+
+
+    verdict.className =
+        "verdict uncertain";
+
+
+    confidenceNumber.textContent =
+        "...";
+
+
+    confidenceFill.style.width =
+        "0%";
+
+
+    verifyButton.style.display =
+        "none";
+
+
+    analyzeButton.disabled =
+        true;
+
+
+    try {
+
+        /* ==================================================
+           SEND TEXT + URL TO FLASK
+        ================================================== */
+
+        const response =
+            await fetch(
+                "http://127.0.0.1:5000/predict",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            text: text,
+
+                            url: sourceUrl
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "Backend error"
+            );
+
+        }
+
+
+        /* ==================================================
+           GET ML DATA
+        ================================================== */
+
+        const prediction =
+            data.result;
+
+        const confidence =
+            data.confidence;
+
+        const fakeProbability =
+            data.fake_probability;
+
+        const realProbability =
+            data.real_probability;
+
+
+        /* ==================================================
+           SHOW VERDICT
+        ================================================== */
+
+        if (prediction === "FAKE") {
+
+            verdict.textContent =
+                "LIKELY FAKE";
+
+            verdict.className =
+                "verdict fake";
+
+            confidenceFill.className =
+                "confidence-fill fake";
+
+            verifyButton.style.display =
+                "none";
+
+        }
+
+
+        else if (prediction === "REAL") {
+
+            verdict.textContent =
+                "LIKELY REAL";
+
+            verdict.className =
+                "verdict real";
+
+            confidenceFill.className =
+                "confidence-fill real";
+
+            verifyButton.style.display =
+                "none";
+
+        }
+
+
+        else {
+
+            verdict.textContent =
+                "NEEDS VERIFICATION";
+
+            verdict.className =
+                "verdict uncertain";
+
+            confidenceFill.className =
+                "confidence-fill uncertain";
+
+            verifyButton.style.display =
+                "block";
+
+        }
+
+
+        /* ==================================================
+           CONFIDENCE
+        ================================================== */
+
+        confidenceNumber.textContent =
+            confidence + "%";
+
+
+        setTimeout(
+            () => {
+
+                confidenceFill.style.width =
+                    confidence + "%";
+
+            },
+            100
+        );
+
+
+        /* ==================================================
+           EVIDENCE
+        ================================================== */
+
+        if (sourceUrl) {
+
+            evidenceOutput.innerHTML =
+
+                "🧠 <b>Machine-learning analysis complete.</b><br><br>" +
+
+                "Fake probability: " +
+                fakeProbability +
+                "%<br>" +
+
+                "Real probability: " +
+                realProbability +
+                "%<br><br>" +
+
+                "🔗 <b>Article source provided:</b><br>" +
+
+                "<a href=\"" +
+                sourceUrl +
+                "\" target=\"_blank\" rel=\"noopener noreferrer\" " +
+                "style=\"color:#45ff9a;word-break:break-all;\">" +
+
+                sourceUrl +
+
+                "</a><br><br>" +
+
+                "The source URL has been received by " +
+                "the TruthLens backend.";
+
+        }
+
+
+        else {
+
+            evidenceOutput.innerHTML =
+
+                "🧠 <b>Machine-learning analysis complete.</b><br><br>" +
+
+                "Fake probability: " +
+                fakeProbability +
+                "%<br>" +
+
+                "Real probability: " +
+                realProbability +
+                "%<br><br>" +
+
+                "No article URL was provided. " +
+
+                "Source verification can be performed " +
+
+                "when a URL is supplied.";
+
+        }
+
+
+        /* ==================================================
+           VERIFY BUTTON
+        ================================================== */
+
+        verifyButton.onclick = () => {
+
+            const verificationURL =
+                "verification.html?" +
+
+                "text=" +
+                encodeURIComponent(text) +
+
+                "&verdict=" +
+                encodeURIComponent(prediction) +
+
+                "&confidence=" +
+                encodeURIComponent(confidence) +
+
+                "&fake_probability=" +
+                encodeURIComponent(fakeProbability) +
+
+                "&real_probability=" +
+                encodeURIComponent(realProbability) +
+
+                "&url=" +
+                encodeURIComponent(sourceUrl);
+
+
+            window.location.href =
+                verificationURL;
+
+        };
+
+
+    }
+
+
+    catch (error) {
+
+        console.error(error);
+
+
+        verdict.textContent =
+            "CONNECTION ERROR";
+
+
+        verdict.className =
+            "verdict uncertain";
+
+
+        confidenceNumber.textContent =
+            "—";
+
+
+        confidenceFill.style.width =
+            "0%";
+
+
+        alert(
+
+            "TruthLens could not connect to the ML backend.\n\n" +
+
+            "Make sure the Flask server is running."
+
+        );
+
+    }
+
+
+    analyzeButton.disabled =
+        false;
+
+
+    result.scrollIntoView({
+
+        behavior: "smooth"
+
+    });
+
+}
+
+
+/* ==================================================
+   ANALYZE ANOTHER CLAIM
+================================================== */
+
+againButton.addEventListener(
+    "click",
+    () => {
+
+        newsInput.value = "";
+
+        articleUrl.value = "";
+
+        result.style.display =
+            "none";
+
+        confidenceFill.style.width =
+            "0%";
+
+        verifyButton.style.display =
+            "none";
+
+        window.scrollTo({
+
+            top: 0,
+
+            behavior: "smooth"
+
+        });
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TruthLens AI | Every Headline Deserves Proof</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- =========================================
+         BACKGROUND
+    ========================================== -->
+
+    <div class="background-grid"></div>
+
+    <div class="orb orb-one"></div>
+    <div class="orb orb-two"></div>
+
+    <div class="particles" id="particles"></div>
+
+
+    <!-- =========================================
+         NAVIGATION
+    ========================================== -->
+
+    <header class="navbar">
+
+        <a href="index.html" class="logo">
+            <div class="logo-eye">
+                <span></span>
+            </div>
+
+            <div class="logo-text">
+                <span class="truth">TRUTH</span><span class="lens">LENS</span>
+                <small>AI</small>
+            </div>
+        </a>
+
+
+        <nav class="nav-links">
+
+            <a href="#home" class="active">Home</a>
+            <a href="#why">Why TruthLens</a>
+            <a href="#how">How It Works</a>
+            <a href="#about">About</a>
+
+        </nav>
+
+
+        <button class="nav-button" onclick="startInvestigation()">
+            Start Investigation
+            <span>↗</span>
+        </button>
+
+    </header>
+
+
+
+    <!-- =========================================
+         HERO SECTION
+    ========================================== -->
+
+    <main>
+
+        <section class="hero" id="home">
+
+            <!-- LEFT SIDE -->
+
+            <div class="hero-content">
+
+                <div class="status-pill">
+                    <span class="status-dot"></span>
+                    AI-POWERED NEWS VERIFICATION
+                </div>
+
+
+                <h1>
+                    <span class="line-one">DON'T JUST</span>
+
+                    <span class="line-two">
+                        <span class="gradient-text">BELIEVE.</span>
+                    </span>
+
+                    <span class="line-three">
+                        <span class="outline-text">VERIFY.</span>
+                    </span>
+                </h1>
+
+
+                <p class="hero-description">
+                    TruthLens AI investigates news using machine learning,
+                    language analysis and trusted sources to help you
+                    understand what deserves your trust.
+                </p>
+
+
+                <div class="hero-buttons">
+
+                    <button class="primary-button" onclick="startInvestigation()">
+
+                        <span class="button-icon">⌕</span>
+
+                        START INVESTIGATION
+
+                        <span class="arrow">→</span>
+
+                    </button>
+
+
+                    <button class="secondary-button" onclick="scrollToSection('how')">
+
+                        <span class="play-icon">▶</span>
+
+                        SEE HOW IT WORKS
+
+                    </button>
+
+                </div>
+
+
+                <div class="hero-note">
+                    <span>●</span>
+                    No account required · Free school demonstration
+                </div>
+
+            </div>
+
+
+
+            <!-- RIGHT SIDE : AI LENS -->
+
+            <div class="hero-visual">
+
+                <div class="visual-label label-top">
+                    <span>TRUTH</span>
+                    <small>ANALYSIS CORE</small>
+                </div>
+
+
+                <div class="lens-system">
+
+                    <div class="outer-ring ring-one"></div>
+                    <div class="outer-ring ring-two"></div>
+                    <div class="outer-ring ring-three"></div>
+
+
+                    <div class="scan-line"></div>
+
+
+                    <div class="lens-core">
+
+                        <div class="core-inner">
+
+                            <div class="core-eye">
+
+                                <div class="eye-glow"></div>
+
+                                <div class="eye-pupil"></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Floating Data Points -->
+
+                    <div class="data-point point-one">
+                        <span></span>
+                        <div>
+                            <strong>SOURCE</strong>
+                            <small>ANALYSIS</small>
+                        </div>
+                    </div>
+
+
+                    <div class="data-point point-two">
+                        <span></span>
+                        <div>
+                            <strong>LANGUAGE</strong>
+                            <small>CHECK</small>
+                        </div>
+                    </div>
+
+
+                    <div class="data-point point-three">
+                        <span></span>
+                        <div>
+                            <strong>EVIDENCE</strong>
+                            <small>SCAN</small>
+                        </div>
+                    </div>
+
+
+                    <div class="data-point point-four">
+                        <span></span>
+                        <div>
+                            <strong>VERDICT</strong>
+                            <small>READY</small>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="visual-label label-bottom">
+                    <span>TRUTHLENS</span>
+                    <small>INVESTIGATION SYSTEM v1.0</small>
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             LIVE STATS
+        ========================================== -->
+
+        <section class="stats-section">
+
+            <div class="stat-card">
+
+                <div class="stat-number">
+                    <span class="counter" data-target="98">0</span>%
+                </div>
+
+                <div class="stat-label">
+                    MODEL ACCURACY
+                </div>
+
+                <div class="stat-line"></div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-number">
+                    <span class="counter" data-target="100">0</span>+
+                </div>
+
+                <div class="stat-label">
+                    TRUSTED SOURCES
+                </div>
+
+                <div class="stat-line"></div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-number">
+                    <span class="counter" data-target="50">0</span>K+
+                </div>
+
+                <div class="stat-label">
+                    TRAINING ARTICLES
+                </div>
+
+                <div class="stat-line"></div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-number">
+                    <span class="counter" data-target="24">0</span>/7
+                </div>
+
+                <div class="stat-label">
+                    READY TO INVESTIGATE
+                </div>
+
+                <div class="stat-line"></div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             WHY TRUTHLENS
+        ========================================== -->
+
+        <section class="why-section" id="why">
+
+            <div class="section-heading">
+
+                <div class="section-tag">
+                    01 / WHY TRUTHLENS
+                </div>
+
+                <h2>
+                    NEWS TRAVELS FAST.
+                    <span>TRUTH SHOULD TOO.</span>
+                </h2>
+
+                <p>
+                    A headline can reach thousands of people before anyone
+                    checks whether it is actually true. TruthLens turns
+                    verification into an investigation.
+                </p>
+
+            </div>
+
+
+            <div class="feature-grid">
+
+                <article class="feature-card">
+
+                    <div class="feature-number">01</div>
+
+                    <div class="feature-icon">◈</div>
+
+                    <h3>AI DETECTION</h3>
+
+                    <p>
+                        A machine learning model analyzes the news
+                        and predicts whether it is likely to be real
+                        or misleading.
+                    </p>
+
+                    <div class="card-arrow">↗</div>
+
+                </article>
+
+
+                <article class="feature-card featured">
+
+                    <div class="feature-number">02</div>
+
+                    <div class="feature-icon">⌁</div>
+
+                    <h3>DEEP ANALYSIS</h3>
+
+                    <p>
+                        TruthLens examines language, evidence,
+                        source credibility and other signals instead
+                        of relying only on the headline.
+                    </p>
+
+                    <div class="card-arrow">↗</div>
+
+                </article>
+
+
+                <article class="feature-card">
+
+                    <div class="feature-number">03</div>
+
+                    <div class="feature-icon">◇</div>
+
+                    <h3>EXPLAINABLE RESULTS</h3>
+
+                    <p>
+                        The AI doesn't simply give a verdict.
+                        It explains the important factors behind
+                        its prediction.
+                    </p>
+
+                    <div class="card-arrow">↗</div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             HOW IT WORKS
+        ========================================== -->
+
+        <section class="how-section" id="how">
+
+            <div class="section-heading centered">
+
+                <div class="section-tag">
+                    02 / THE INVESTIGATION
+                </div>
+
+                <h2>
+                    HOW DOES
+                    <span>TRUTHLENS THINK?</span>
+                </h2>
+
+                <p>
+                    Every investigation follows a structured AI process.
+                </p>
+
+            </div>
+
+
+            <div class="process-container">
+
+                <div class="process-line"></div>
+
+
+                <div class="process-step">
+
+                    <div class="process-circle">01</div>
+
+                    <h3>INPUT</h3>
+
+                    <p>
+                        News text, image, URL or voice.
+                    </p>
+
+                </div>
+
+
+                <div class="process-step">
+
+                    <div class="process-circle">02</div>
+
+                    <h3>PREPROCESS</h3>
+
+                    <p>
+                        Clean and prepare the information.
+                    </p>
+
+                </div>
+
+
+                <div class="process-step">
+
+                    <div class="process-circle">03</div>
+
+                    <h3>ANALYZE</h3>
+
+                    <p>
+                        Extract language and evidence signals.
+                    </p>
+
+                </div>
+
+
+                <div class="process-step">
+
+                    <div class="process-circle">04</div>
+
+                    <h3>PREDICT</h3>
+
+                    <p>
+                        Machine learning generates a verdict.
+                    </p>
+
+                </div>
+
+
+                <div class="process-step">
+
+                    <div class="process-circle">05</div>
+
+                    <h3>EXPLAIN</h3>
+
+                    <p>
+                        Results are presented with reasons.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================
+             PROJECT MESSAGE
+        ========================================== -->
+
+        <section class="message-section" id="about">
+
+            <div class="message-card">
+
+                <div class="message-small">
+                    TRUTHLENS AI / PROJECT MESSAGE
+                </div>
+
+                <h2>
+                    BEFORE YOU
+                    <span>SHARE.</span>
+                </h2>
+
+                <p>
+                    Stop. Check. Think.
+                </p>
+
+                <div class="message-line"></div>
+
+                <div class="message-bottom">
+                    <span>BUILT FOR A WORLD THAT SHARES BEFORE IT CHECKS.</span>
+
+                    <span>→</span>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =========================================
+         FOOTER
+    ========================================== -->
+
+    <footer>
+
+        <div class="footer-logo">
+            <div class="logo-eye small-eye">
+                <span></span>
+            </div>
+
+            <div class="logo-text">
+                <span class="truth">TRUTH</span><span class="lens">LENS</span>
+                <small>AI</small>
+            </div>
+        </div>
+
+
+        <div class="footer-middle">
+            AI PROJECT CYCLE · FAKE NEWS DETECTION
+        </div>
+
+
+        <div class="footer-right">
+            VERSION 1.0
+        </div>
+
+    </footer>
+
+
+
+    <!-- =========================================
+         SCRIPT
+    ========================================== -->
+
+ <script src="js/app.js"></script>
+
+</body>
+</html>
+

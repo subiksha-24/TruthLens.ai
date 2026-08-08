@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TruthLens AI | Quick Setup</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 75% 30%, rgba(0, 120, 255, 0.12), transparent 30%),
+                radial-gradient(circle at 20% 80%, rgba(0, 255, 180, 0.07), transparent 30%),
+                #030609;
+            color: #eaf4ff;
+            font-family: Arial, Helvetica, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* BACKGROUND GRID */
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.18;
+            background-image:
+                linear-gradient(rgba(0, 150, 255, 0.12) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 150, 255, 0.12) 1px, transparent 1px);
+            background-size: 45px 45px;
+        }
+
+        /* HEADER */
+
+        header {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 7%;
+            border-bottom: 1px solid rgba(80, 160, 255, 0.15);
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: #3288ff;
+        }
+
+        .ai {
+            font-size: 9px;
+            color: #45ff9a;
+            letter-spacing: 2px;
+            margin-left: 3px;
+        }
+
+        .status {
+            font-size: 11px;
+            color: #65aaff;
+            letter-spacing: 1.5px;
+        }
+
+        .status::before {
+            content: "●";
+            color: #40ff91;
+            margin-right: 7px;
+        }
+
+        /* MAIN */
+
+        main {
+            width: min(900px, 90%);
+            margin: 0 auto;
+            padding: 70px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .system-label {
+            text-align: center;
+            color: #4ba8ff;
+            font-size: 11px;
+            letter-spacing: 4px;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: clamp(38px, 6vw, 70px);
+            letter-spacing: 2px;
+            line-height: 1;
+            margin-bottom: 18px;
+        }
+
+        h1 span {
+            color: #46ff88;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #8495a9;
+            max-width: 620px;
+            margin: 0 auto 50px;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        /* PROGRESS */
+
+        .progress-area {
+            margin-bottom: 35px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            color: #65788d;
+            font-size: 11px;
+            letter-spacing: 1px;
+            margin-bottom: 9px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 3px;
+            background: #101a25;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 33.33%;
+            height: 100%;
+            background: linear-gradient(90deg, #1488ff, #46ff88);
+            transition: width 0.4s ease;
+        }
+
+        /* QUESTION CARD */
+
+        .question-card {
+            border: 1px solid rgba(50, 150, 255, 0.35);
+            background: rgba(7, 15, 24, 0.88);
+            padding: 42px;
+            min-height: 390px;
+            position: relative;
+            box-shadow:
+                0 0 50px rgba(0, 120, 255, 0.07),
+                inset 0 0 30px rgba(0, 120, 255, 0.025);
+        }
+
+        .corner {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-color: #3288ff;
+            border-style: solid;
+        }
+
+        .corner.tl {
+            top: -1px;
+            left: -1px;
+            border-width: 2px 0 0 2px;
+        }
+
+        .corner.tr {
+            top: -1px;
+            right: -1px;
+            border-width: 2px 2px 0 0;
+        }
+
+        .corner.bl {
+            bottom: -1px;
+            left: -1px;
+            border-width: 0 0 2px 2px;
+        }
+
+        .corner.br {
+            bottom: -1px;
+            right: -1px;
+            border-width: 0 2px 2px 0;
+        }
+
+        .question-number {
+            color: #45ff9a;
+            font-size: 11px;
+            letter-spacing: 3px;
+            margin-bottom: 14px;
+        }
+
+        .question {
+            font-size: clamp(23px, 4vw, 34px);
+            margin-bottom: 30px;
+            line-height: 1.25;
+        }
+
+        /* OPTIONS */
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .option {
+            background: #08111b;
+            border: 1px solid #1a2b3d;
+            color: #b8c9da;
+            padding: 18px;
+            text-align: left;
+            cursor: pointer;
+            transition: 0.25s;
+            font-size: 14px;
+        }
+
+        .option:hover {
+            border-color: #3288ff;
+            background: #0b1a2b;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .option.selected {
+            border-color: #45ff9a;
+            background: rgba(69, 255, 154, 0.08);
+            color: #ffffff;
+            box-shadow: 0 0 18px rgba(69, 255, 154, 0.08);
+        }
+
+        .option-number {
+            color: #3288ff;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        /* NEXT BUTTON */
+
+        .next-area {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 22px;
+        }
+
+        .next-btn {
+            border: 1px solid #3288ff;
+            background: #07111c;
+            color: #eaf4ff;
+            padding: 14px 28px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            font-size: 11px;
+            transition: 0.25s;
+        }
+
+        .next-btn:hover {
+            background: #3288ff;
+            color: #02060a;
+            box-shadow: 0 0 25px rgba(50, 136, 255, 0.3);
+        }
+
+        .next-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* FINAL SCREEN */
+
+        .final-screen {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .final-icon {
+            width: 90px;
+            height: 90px;
+            border: 1px solid #45ff9a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 28px;
+            color: #45ff9a;
+            font-size: 38px;
+            box-shadow: 0 0 35px rgba(69, 255, 154, 0.15);
+        }
+
+        .final-screen h2 {
+            font-size: 38px;
+            margin-bottom: 15px;
+        }
+
+        .final-screen h2 span {
+            color: #45ff9a;
+        }
+
+        .final-screen p {
+            color: #8799aa;
+            max-width: 550px;
+            margin: 0 auto 35px;
+            line-height: 1.7;
+        }
+
+        .enter-btn {
+            padding: 16px 35px;
+            border: 1px solid #45ff9a;
+            background: rgba(69, 255, 154, 0.08);
+            color: #45ff9a;
+            cursor: pointer;
+            font-weight: bold;
+            letter-spacing: 2px;
+            transition: 0.25s;
+        }
+
+        .enter-btn:hover {
+            background: #45ff9a;
+            color: #031009;
+            box-shadow: 0 0 30px rgba(69, 255, 154, 0.25);
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 650px) {
+
+            header {
+                padding: 0 5%;
+            }
+
+            .status {
+                display: none;
+            }
+
+            main {
+                padding: 45px 0;
+            }
+
+            .question-card {
+                padding: 28px 20px;
+            }
+
+            .options {
+                grid-template-columns: 1fr;
+            }
+
+            .question {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        TRUTH<span>LENS</span><sup class="ai">AI</sup>
+    </div>
+
+    <div class="status">
+        SYSTEM ONLINE
+    </div>
+
+</header>
+
+
+<main>
+
+    <div class="system-label">
+        TRUTHLENS // QUICK SETUP
+    </div>
+
+    <h1>
+        BEFORE WE <span>BEGIN.</span>
+    </h1>
+
+    <p class="subtitle">
+        TruthLens is ready to investigate.
+        Answer a few quick questions so we can personalize
+        your experience. No account. No personal information required.
+    </p>
+
+
+    <!-- PROGRESS -->
+
+    <div class="progress-area">
+
+        <div class="progress-text">
+            <span id="stepText">QUESTION 01 / 03</span>
+            <span id="progressPercent">33%</span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+    </div>
+
+
+    <!-- QUESTION CARD -->
+
+    <section class="question-card" id="questionCard">
+
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+
+      <div class="question-number" id="questionNumber">
+    QUESTION 01 · SELECT ALL THAT APPLY
+</div>
+
+        <div class="question" id="questionText">
+            Where do you usually discover news?
+        </div>
+
+        <div class="options" id="optionsContainer"></div>
+
+        <div class="next-area">
+            <button class="next-btn" id="nextButton" disabled>
+                CONTINUE →
+            </button>
+        </div>
+
+    </section>
+
+
+    <!-- FINAL SCREEN -->
+
+    <section class="final-screen" id="finalScreen">
+
+        <div class="final-icon">
+            ✓
+        </div>
+
+        <h2>
+            YOUR <span>TRUTH PROFILE</span> IS READY.
+        </h2>
+
+        <p>
+            Your preferences have been recorded locally for this session.
+            Now enter the TruthLens investigation system and test a news
+            claim using our fake-news detection model.
+        </p>
+
+        <button class="enter-btn" id="enterButton">
+            ENTER TRUTHLENS →
+        </button>
+
+    </section>
+
+</main>
+
+
+<script>
+
+    const questions = [
+
+        {
+            question: "Where do you usually discover news?",
+            options: [
+                "Social Media",
+                "WhatsApp",
+                "YouTube",
+                "News Websites",
+                "Friends & Family",
+                "Other"
+            ]
+        },
+
+        {
+            question: "What kind of news catches your attention?",
+            options: [
+                "World & Current Affairs",
+                "Sports",
+                "Technology",
+                "Entertainment",
+                "Business",
+                "Science & Health"
+            ]
+        },
+
+        {
+            question: "What do you usually do when you see a shocking headline?",
+            options: [
+                "Share it immediately",
+                "Read it first",
+                "Check another source",
+                "Verify it before sharing"
+            ]
+        }
+
+    ];
+
+
+let currentQuestion = 0;
+let selectedAnswers = [];
+
+    const questionText =
+        document.getElementById("questionText");
+
+    const questionNumber =
+        document.getElementById("questionNumber");
+
+    const optionsContainer =
+        document.getElementById("optionsContainer");
+
+    const nextButton =
+        document.getElementById("nextButton");
+
+    const progressFill =
+        document.getElementById("progressFill");
+
+    const progressPercent =
+        document.getElementById("progressPercent");
+
+    const stepText =
+        document.getElementById("stepText");
+
+    const questionCard =
+        document.getElementById("questionCard");
+
+    const finalScreen =
+        document.getElementById("finalScreen");
+
+
+    function loadQuestion() {
+
+        const current = questions[currentQuestion];
+
+        selectedAnswers = [];
+
+        questionNumber.textContent =
+            `QUESTION ${String(currentQuestion + 1).padStart(2, "0")}`;
+
+        questionText.textContent =
+            current.question;
+
+        optionsContainer.innerHTML = "";
+
+        nextButton.disabled = true;
+
+        current.options.forEach((option, index) => {
+
+            const button = document.createElement("button");
+
+            button.className = "option";
+
+            button.innerHTML =
+                `<span class="option-number">
+                    ${String.fromCharCode(65 + index)}
+                </span>
+                ${option}`;
+
+            button.addEventListener("click", () => {
+
+    if (selectedAnswers.includes(option)) {
+
+        // Remove the option if clicked again
+        selectedAnswers =
+            selectedAnswers.filter(answer => answer !== option);
+
+        button.classList.remove("selected");
+
+    } else {
+
+        // Add the option
+        selectedAnswers.push(option);
+
+        button.classList.add("selected");
+
+    }
+
+    // Continue is available when at least one option is selected
+    nextButton.disabled =
+        selectedAnswers.length === 0;
+
+});
+
+            optionsContainer.appendChild(button);
+
+        });
+
+        const percent =
+            Math.round(((currentQuestion + 1) / questions.length) * 100);
+
+        progressFill.style.width = percent + "%";
+
+        progressPercent.textContent = percent + "%";
+
+        stepText.textContent =
+            `QUESTION ${String(currentQuestion + 1).padStart(2, "0")} / 03`;
+
+    }
+
+
+    nextButton.addEventListener("click", () => {
+
+        if (selectedAnswers.length === 0) return;
+
+        currentQuestion++;
+
+        if (currentQuestion < questions.length) {
+
+            loadQuestion();
+
+        } else {
+
+            questionCard.style.display = "none";
+
+            document.querySelector(".progress-area").style.display = "none";
+
+            finalScreen.style.display = "block";
+
+        }
+
+    });
+
+
+    document.getElementById("enterButton")
+        .addEventListener("click", () => {
+
+            window.location.href = "detector.html";
+
+        });
+
+
+    loadQuestion();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TruthLens AI | Verification</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at 80% 15%,
+            rgba(0,130,255,0.12),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 15% 80%,
+            rgba(0,255,160,0.06),
+            transparent 30%
+        ),
+        #030609;
+
+    color: #eaf4ff;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+
+/* GRID BACKGROUND */
+
+body::before {
+
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: 0.13;
+
+    background-image:
+
+        linear-gradient(
+            rgba(0,150,255,0.12) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(0,150,255,0.12) 1px,
+            transparent 1px
+        );
+
+    background-size: 45px 45px;
+}
+
+
+/* HEADER */
+
+header {
+
+    height: 80px;
+
+    padding: 0 7%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    border-bottom:
+        1px solid
+        rgba(80,160,255,0.15);
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+.logo {
+
+    font-size: 22px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+}
+
+
+.logo span {
+
+    color: #3288ff;
+}
+
+
+.ai {
+
+    color: #45ff9a;
+
+    font-size: 9px;
+
+    letter-spacing: 2px;
+
+    margin-left: 3px;
+}
+
+
+.status {
+
+    color: #45ff9a;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+}
+
+
+.status::before {
+
+    content: "●";
+
+    margin-right: 7px;
+}
+
+
+/* MAIN */
+
+main {
+
+    width: min(1100px, 90%);
+
+    margin: auto;
+
+    padding: 60px 0 100px;
+
+    position: relative;
+
+    z-index: 1;
+}
+
+
+.system-label {
+
+    text-align: center;
+
+    color: #4ba8ff;
+
+    font-size: 10px;
+
+    letter-spacing: 4px;
+
+    margin-bottom: 15px;
+}
+
+
+h1 {
+
+    text-align: center;
+
+    font-size:
+        clamp(36px, 6vw, 65px);
+
+    margin-bottom: 15px;
+}
+
+
+h1 span {
+
+    color: #ffc857;
+}
+
+
+.subtitle {
+
+    max-width: 650px;
+
+    margin: auto;
+
+    text-align: center;
+
+    color: #8395a9;
+
+    line-height: 1.7;
+
+    font-size: 14px;
+
+    margin-bottom: 45px;
+}
+
+
+/* CLAIM */
+
+.panel {
+
+    border:
+        1px solid
+        rgba(50,136,255,0.35);
+
+    background:
+        rgba(6,14,23,0.9);
+
+    padding: 30px;
+
+    margin-bottom: 22px;
+}
+
+
+.panel-title {
+
+    color: #45ff9a;
+
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 20px;
+}
+
+
+.claim {
+
+    background: #040a10;
+
+    border-left:
+        2px solid
+        #3288ff;
+
+    padding: 22px;
+
+    color: #c5d3df;
+
+    line-height: 1.7;
+
+    font-size: 14px;
+}
+
+
+/* GRID */
+
+.grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 22px;
+}
+
+
+/* CARDS */
+
+.card {
+
+    border:
+        1px solid
+        #1b2c3d;
+
+    background:
+        rgba(6,14,23,0.88);
+
+    padding: 28px;
+
+    min-height: 220px;
+}
+
+
+.card-title {
+
+    color: #45ff9a;
+
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 22px;
+}
+
+
+.stat {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    gap: 20px;
+
+    padding: 13px 0;
+
+    border-bottom:
+        1px solid
+        rgba(80,120,150,0.12);
+
+    font-size: 12px;
+}
+
+
+.stat:last-child {
+
+    border-bottom: none;
+}
+
+
+.stat-label {
+
+    color: #71869a;
+}
+
+
+.stat-value {
+
+    color: #eaf4ff;
+
+    text-align: right;
+
+    font-weight: bold;
+}
+
+
+.fake {
+
+    color: #ff5d6c !important;
+}
+
+
+.real {
+
+    color: #45ff9a !important;
+}
+
+
+.uncertain {
+
+    color: #ffc857 !important;
+}
+
+
+/* CONFIDENCE */
+
+.confidence {
+
+    margin-top: 22px;
+}
+
+
+.confidence-label {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    color: #71869a;
+
+    font-size: 10px;
+
+    margin-bottom: 8px;
+}
+
+
+.bar {
+
+    width: 100%;
+
+    height: 8px;
+
+    background: #101a24;
+}
+
+
+.fill {
+
+    height: 100%;
+
+    width: 0%;
+
+    background: #ffc857;
+
+    transition:
+        width 1s ease;
+}
+
+
+/* SOURCE */
+
+.source-box {
+
+    background: #040a10;
+
+    border:
+        1px solid
+        #182b3d;
+
+    padding: 18px;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+    word-break: break-all;
+}
+
+
+.source-box a {
+
+    color: #45ff9a;
+
+    text-decoration: none;
+}
+
+
+.source-box a:hover {
+
+    text-decoration: underline;
+}
+
+
+/* EVIDENCE */
+
+.evidence-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+.evidence-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    background: #050b11;
+
+    border:
+        1px solid
+        #182a3a;
+
+    padding: 15px;
+
+    color: #9aabba;
+
+    font-size: 12px;
+}
+
+
+.icon {
+
+    width: 25px;
+
+    height: 25px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    font-size: 12px;
+}
+
+
+.pending {
+
+    background:
+        rgba(255,200,87,0.1);
+
+    color: #ffc857;
+
+    border:
+        1px solid
+        rgba(255,200,87,0.3);
+}
+
+
+.available {
+
+    background:
+        rgba(69,255,154,0.1);
+
+    color: #45ff9a;
+
+    border:
+        1px solid
+        rgba(69,255,154,0.3);
+}
+
+
+/* FINAL ASSESSMENT */
+
+.final {
+
+    margin-top: 25px;
+
+    border:
+        1px solid
+        rgba(255,200,87,0.4);
+
+    background:
+        rgba(255,200,87,0.04);
+
+    padding: 35px;
+
+    text-align: center;
+}
+
+
+.final-label {
+
+    color: #7f8e9d;
+
+    font-size: 10px;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 15px;
+}
+
+
+.final-status {
+
+    color: #ffc857;
+
+    font-size:
+        clamp(30px,5vw,48px);
+
+    font-weight: 800;
+
+    margin-bottom: 15px;
+}
+
+
+.final-text {
+
+    max-width: 650px;
+
+    margin: auto;
+
+    color: #8fa0af;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+/* DISCLAIMER */
+
+.disclaimer {
+
+    margin-top: 22px;
+
+    padding: 18px;
+
+    border:
+        1px dashed
+        #243b50;
+
+    color: #617487;
+
+    font-size: 11px;
+
+    line-height: 1.6;
+
+    text-align: center;
+}
+
+
+/* BUTTON */
+
+.again {
+
+    display: block;
+
+    margin: 35px auto 0;
+
+    padding: 15px 28px;
+
+    background: transparent;
+
+    border:
+        1px solid
+        #3288ff;
+
+    color: #75b5ff;
+
+    cursor: pointer;
+
+    letter-spacing: 2px;
+
+    transition: 0.25s;
+}
+
+
+.again:hover {
+
+    background: #3288ff;
+
+    color: #02060a;
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* MOBILE */
+
+@media (max-width:700px) {
+
+    header {
+
+        padding: 0 5%;
+    }
+
+    .status {
+
+        display: none;
+    }
+
+    main {
+
+        padding-top: 40px;
+    }
+
+    .grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .panel,
+    .card {
+
+        padding: 22px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+
+        TRUTH<span>LENS</span>
+
+        <sup class="ai">
+            AI
+        </sup>
+
+    </div>
+
+
+    <div class="status">
+
+        VERIFICATION ENGINE
+
+    </div>
+
+</header>
+
+
+<main>
+
+
+<div class="system-label">
+
+    TRUTHLENS // SECONDARY ANALYSIS
+
+</div>
+
+
+<h1>
+
+    VERIFY THE <span>EVIDENCE.</span>
+
+</h1>
+
+
+<p class="subtitle">
+
+    The machine-learning prediction is only the
+    first stage. This investigation page separates
+    the model's prediction from independent evidence.
+
+</p>
+
+
+<!-- CLAIM -->
+
+<section class="panel">
+
+    <div class="panel-title">
+
+        CLAIM UNDER INVESTIGATION
+
+    </div>
+
+
+    <div
+        class="claim"
+        id="claim"
+    >
+
+        Loading claim...
+
+    </div>
+
+</section>
+
+
+<!-- TWO COLUMN AREA -->
+
+<div class="grid">
+
+
+<!-- ML ANALYSIS -->
+
+<section class="card">
+
+    <div class="card-title">
+
+        01 // MODEL ANALYSIS
+
+    </div>
+
+
+    <div class="stat">
+
+        <span class="stat-label">
+            ML Verdict
+        </span>
+
+        <span
+            class="stat-value"
+            id="verdict"
+        >
+            —
+        </span>
+
+    </div>
+
+
+    <div class="stat">
+
+        <span class="stat-label">
+            Model Confidence
+        </span>
+
+        <span
+            class="stat-value"
+            id="confidence"
+        >
+            —
+        </span>
+
+    </div>
+
+
+    <div class="stat">
+
+        <span class="stat-label">
+            Fake Probability
+        </span>
+
+        <span
+            class="stat-value fake"
+            id="fakeProbability"
+        >
+            —
+        </span>
+
+    </div>
+
+
+    <div class="stat">
+
+        <span class="stat-label">
+            Real Probability
+        </span>
+
+        <span
+            class="stat-value real"
+            id="realProbability"
+        >
+            —
+        </span>
+
+    </div>
+
+
+    <div class="confidence">
+
+        <div class="confidence-label">
+
+            <span>
+                MODEL CONFIDENCE
+            </span>
+
+            <span id="confidenceLabel">
+                0%
+            </span>
+
+        </div>
+
+
+        <div class="bar">
+
+            <div
+                class="fill"
+                id="confidenceBar"
+            ></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- SOURCE -->
+
+<section class="card">
+
+    <div class="card-title">
+
+        02 // SOURCE CHECK
+
+    </div>
+
+
+    <div class="stat">
+
+        <span class="stat-label">
+            Article URL
+        </span>
+
+        <span
+            class="stat-value"
+            id="sourceStatus"
+        >
+            —
+        </span>
+
+    </div>
+
+
+    <div
+        class="source-box"
+        id="sourceBox"
+    >
+
+        Checking source information...
+
+    </div>
+
+</section>
+
+
+<!-- EVIDENCE -->
+
+<section class="card">
+
+    <div class="card-title">
+
+        03 // EVIDENCE STATUS
+
+    </div>
+
+
+    <div class="evidence-list">
+
+
+        <div class="evidence-item">
+
+            <div class="icon available">
+                ✓
+            </div>
+
+            <div>
+                Claim received successfully.
+            </div>
+
+        </div>
+
+
+        <div class="evidence-item">
+
+            <div class="icon available">
+                ✓
+            </div>
+
+            <div>
+                Machine-learning analysis completed.
+            </div>
+
+        </div>
+
+
+        <div
+            class="evidence-item"
+            id="sourceEvidence"
+        >
+
+            <div class="icon pending">
+                ?
+            </div>
+
+            <div>
+                Independent source evidence is required.
+            </div>
+
+        </div>
+
+
+        <div class="evidence-item">
+
+            <div class="icon pending">
+                ?
+            </div>
+
+            <div>
+                Cross-source confirmation has not yet been established.
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- WHAT THIS MEANS -->
+
+<section class="card">
+
+    <div class="card-title">
+
+        04 // INVESTIGATION NOTE
+
+    </div>
+
+
+    <p
+        style="
+        color:#8295a8;
+        font-size:13px;
+        line-height:1.8;
+        "
+    >
+
+        A machine-learning model identifies
+        patterns learned from its training data.
+        It does not independently prove that a
+        real-world claim is true or false.
+
+        <br><br>
+
+        Therefore, a claim requiring further
+        checking is marked for additional evidence
+        rather than being presented as a confirmed
+        fact.
+
+    </p>
+
+</section>
+
+</div>
+
+
+<!-- FINAL -->
+
+<section class="final">
+
+
+<div class="final-label">
+
+    FINAL INVESTIGATION STATUS
+
+</div>
+
+
+<div
+    class="final-status"
+    id="finalStatus"
+>
+
+    NEEDS MORE EVIDENCE
+
+</div>
+
+
+<div
+    class="final-text"
+    id="finalText"
+>
+
+    The available machine-learning result is not
+    sufficient on its own to establish the truth
+    of this claim. Independent evidence should be
+    checked before reaching a final conclusion.
+
+</div>
+
+
+</section>
+
+
+<!-- DISCLAIMER -->
+
+<div class="disclaimer">
+
+    ⚠ TRUTHLENS MODEL OUTPUT IS A PREDICTION,
+    NOT PROOF. ALWAYS CHECK RELIABLE SOURCES
+    BEFORE ACCEPTING A CLAIM AS FACT.
+
+</div>
+
+
+<!-- AGAIN -->
+
+<button
+    class="again"
+    id="againButton"
+>
+
+    ← CHECK ANOTHER CLAIM
+
+</button>
+
+
+</main>
+
+
+<script>
+
+/* ==================================================
+   READ URL PARAMETERS
+================================================== */
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const claim =
+    params.get("text") ||
+    "No claim was supplied.";
+
+
+const verdictValue =
+    params.get("verdict") ||
+    "UNCERTAIN";
+
+
+const confidence =
+    parseFloat(
+        params.get("confidence")
+    ) || 0;
+
+
+const fakeProbability =
+    params.get("fake_probability") ||
+    "—";
+
+
+const realProbability =
+    params.get("real_probability") ||
+    "—";
+
+
+const sourceUrl =
+    params.get("url") ||
+    "";
+
+
+/* ==================================================
+   ELEMENTS
+================================================== */
+
+const claimElement =
+    document.getElementById("claim");
+
+
+const verdictElement =
+    document.getElementById("verdict");
+
+
+const confidenceElement =
+    document.getElementById("confidence");
+
+
+const fakeElement =
+    document.getElementById("fakeProbability");
+
+
+const realElement =
+    document.getElementById("realProbability");
+
+
+const confidenceBar =
+    document.getElementById("confidenceBar");
+
+
+const confidenceLabel =
+    document.getElementById("confidenceLabel");
+
+
+const sourceStatus =
+    document.getElementById("sourceStatus");
+
+
+const sourceBox =
+    document.getElementById("sourceBox");
+
+
+const sourceEvidence =
+    document.getElementById("sourceEvidence");
+
+
+const finalStatus =
+    document.getElementById("finalStatus");
+
+
+const finalText =
+    document.getElementById("finalText");
+
+
+const againButton =
+    document.getElementById("againButton");
+
+
+/* ==================================================
+   CLAIM
+================================================== */
+
+claimElement.textContent =
+    claim;
+
+
+/* ==================================================
+   ML VERDICT
+================================================== */
+
+if (verdictValue === "FAKE") {
+
+    verdictElement.textContent =
+        "LIKELY FAKE";
+
+    verdictElement.className =
+        "stat-value fake";
+
+}
+
+
+else if (verdictValue === "REAL") {
+
+    verdictElement.textContent =
+        "LIKELY REAL";
+
+    verdictElement.className =
+        "stat-value real";
+
+}
+
+
+else {
+
+    verdictElement.textContent =
+        "NEEDS VERIFICATION";
+
+    verdictElement.className =
+        "stat-value uncertain";
+
+}
+
+
+/* ==================================================
+   CONFIDENCE
+================================================== */
+
+confidenceElement.textContent =
+    confidence + "%";
+
+
+confidenceLabel.textContent =
+    confidence + "%";
+
+
+setTimeout(
+    () => {
+
+        confidenceBar.style.width =
+            confidence + "%";
+
+    },
+    200
+);
+
+
+/* ==================================================
+   PROBABILITIES
+================================================== */
+
+fakeElement.textContent =
+    fakeProbability + "%";
+
+
+realElement.textContent =
+    realProbability + "%";
+
+
+/* ==================================================
+   SOURCE CHECK
+================================================== */
+
+if (sourceUrl) {
+
+    sourceStatus.textContent =
+        "PROVIDED";
+
+    sourceStatus.className =
+        "stat-value real";
+
+
+    sourceBox.innerHTML =
+
+        "<b style='color:#45ff9a;'>SOURCE RECEIVED</b>" +
+
+        "<br><br>" +
+
+        "<a href=\"" +
+        sourceUrl +
+        "\" target=\"_blank\" rel=\"noopener noreferrer\">" +
+
+        sourceUrl +
+
+        "</a>";
+
+
+    sourceEvidence.innerHTML =
+
+        "<div class='icon available'>✓</div>" +
+
+        "<div>" +
+        "An article source was provided for further review." +
+        "</div>";
+
+}
+
+
+else {
+
+    sourceStatus.textContent =
+        "NOT PROVIDED";
+
+    sourceStatus.className =
+        "stat-value uncertain";
+
+
+    sourceBox.innerHTML =
+
+        "<b style='color:#ffc857;'>NO SOURCE PROVIDED</b>" +
+
+        "<br><br>" +
+
+        "An article URL was not supplied. " +
+
+        "Independent source checking cannot begin " +
+
+        "from a specific article.";
+
+}
+
+
+/* ==================================================
+   FINAL STATUS
+================================================== */
+
+finalStatus.textContent =
+    "NEEDS MORE EVIDENCE";
+
+
+/* ==================================================
+   EXPLANATION BASED ON RESULT
+================================================== */
+
+if (verdictValue === "FAKE") {
+
+    finalText.textContent =
+
+        "The machine-learning model identified " +
+
+        "patterns associated with potentially " +
+
+        "misleading content. However, the model " +
+
+        "prediction alone does not prove that the " +
+
+        "claim is false. Independent evidence is " +
+
+        "required before reaching a final conclusion.";
+
+}
+
+
+else if (verdictValue === "REAL") {
+
+    finalText.textContent =
+
+        "The machine-learning model identified " +
+
+        "patterns associated with real news in " +
+
+        "its training data. However, a model " +
+
+        "prediction alone does not independently " +
+
+        "confirm the real-world claim. Reliable " +
+
+        "evidence should still be checked.";
+
+}
+
+
+else {
+
+    finalText.textContent =
+
+        "The model could not confidently classify " +
+
+        "this claim. Additional evidence and " +
+
+        "reliable sources should be checked before " +
+
+        "reaching a final conclusion.";
+
+}
+
+
+/* ==================================================
+   CHECK ANOTHER CLAIM
+================================================== */
+
+againButton.addEventListener(
+    "click",
+    () => {
+
+        window.location.href =
+            "detector.html";
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>
