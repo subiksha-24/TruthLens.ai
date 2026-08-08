@@ -1,118 +1,59 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
+from pathlib import Path
 import joblib
-import os
-
-# ==================================================
-# TRUTHLENS AI - VERCEL ML BACKEND
-# ==================================================
 
 app = Flask(__name__)
-CORS(app)
 
-print("======================================")
-print("       TRUTHLENS AI ML BACKEND")
-print("======================================")
+# Project root = folder containing app.py, model files, etc.
+ROOT = Path(__file__).resolve().parent.parent
 
-# ==================================================
-# LOAD MODEL + VECTORIZER
-# ==================================================
+MODEL_PATH = ROOT / "truthlens_model.pkl"
+VECTORIZER_PATH = ROOT / "truthlens_vectorizer.pkl"
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-MODEL_PATH = os.path.join(
-    BASE_DIR,
-    "truthlens_model.pkl"
-)
+def load_model():
+    model = joblib.load(MODEL_PATH)
+    vectorizer = joblib.load(VECTORIZER_PATH)
+    return model, vectorizer
 
-VECTORIZER_PATH = os.path.join(
-    BASE_DIR,
-    "truthlens_vectorizer.pkl"
-)
-
-print("Loading trained model...")
-
-model = joblib.load(MODEL_PATH)
-
-print("Loading vectorizer...")
-
-vectorizer = joblib.load(VECTORIZER_PATH)
-
-print("Model loaded successfully!")
-print("Vectorizer loaded successfully!")
-
-# ==================================================
-# TEST ROUTE
-# ==================================================
 
 @app.route("/api", methods=["GET"])
-def api_home():
+def health():
     return jsonify({
         "status": "online",
         "message": "TruthLens AI ML backend is running."
     })
 
 
-# ==================================================
-# PREDICTION API
-# ==================================================
-
 @app.route("/api/predict", methods=["POST"])
 def predict():
 
+    data = request.get_json(silent=True)
+
+    if not data:
+        return jsonify({
+            "error": "No data received."
+        }), 400
+
+    text = data.get("text", "").strip()
+    url = data.get("url", "").strip()
+
+    if not text:
+        return jsonify({
+            "error": "Please enter a news claim."
+        }), 400
+
     try:
-
-        # ------------------------------------------
-        # GET DATA FROM WEBSITE
-        # ------------------------------------------
-
-        data = request.get_json()
-
-        if not data:
-            return jsonify({
-                "error": "No data received."
-            }), 400
-
-        # ------------------------------------------
-        # GET CLAIM + OPTIONAL URL
-        # ------------------------------------------
-
-        text = data.get("text", "").strip()
-        url = data.get("url", "").strip()
-
-        # ------------------------------------------
-        # CHECK CLAIM
-        # ------------------------------------------
-
-        if not text:
-            return jsonify({
-                "error": "Please enter a news claim."
-            }), 400
-
-        # ------------------------------------------
-        # CONVERT TEXT INTO NUMERICAL FORMAT
-        # ------------------------------------------
+        model, vectorizer = load_model()
 
         text_vector = vectorizer.transform([text])
 
-        # ------------------------------------------
-        # ML PREDICTION
-        # ------------------------------------------
-
         prediction = model.predict(text_vector)[0]
-
-        # ------------------------------------------
-        # GET MODEL PROBABILITIES
-        # ------------------------------------------
 
         probabilities = model.predict_proba(text_vector)[0]
 
         fake_probability = float(probabilities[0])
         real_probability = float(probabilities[1])
-
-        # ------------------------------------------
-        # DETERMINE VERDICT
-        # ------------------------------------------
 
         if prediction == 0:
 
@@ -132,65 +73,24 @@ def predict():
             else:
                 result = "UNCERTAIN"
 
-        # ------------------------------------------
-        # CONVERT TO PERCENTAGE
-        # ------------------------------------------
-
-        confidence_percentage = round(
-            confidence * 100,
-            2
-        )
-
-        fake_percentage = round(
-            fake_probability * 100,
-            2
-        )
-
-        real_percentage = round(
-            real_probability * 100,
-            2
-        )
-
-        # ------------------------------------------
-        # SEND RESULT TO WEBSITE
-        # ------------------------------------------
+        confidence_percentage = round(confidence * 100, 2)
 
         return jsonify({
-
             "result": result,
-
             "confidence": confidence_percentage,
-
-            "fake_probability": fake_percentage,
-
-            "real_probability": real_percentage,
-
+            "fake_probability": round(fake_probability * 100, 2),
+            "real_probability": round(real_probability * 100, 2),
             "article_url": url,
-
-            "message":
-                "Prediction generated by the "
-                "TruthLens machine-learning model."
-
+            "message": "Prediction generated by the TruthLens machine-learning model."
         })
 
     except Exception as e:
 
-        print("Prediction error:", str(e))
-
         return jsonify({
-
-            "error":
-                "The ML backend encountered an error.",
-
-            "details":
-                str(e)
-
+            "error": "The TruthLens ML model could not be loaded.",
+            "details": str(e)
         }), 500
 
 
-# ==================================================
-# VERCEL ENTRY POINT
-# ==================================================
-
-# Do NOT use app.run() here.
-# Vercel runs the Flask application automatically.
+if __name__ == "__main__":
+    app.run()
